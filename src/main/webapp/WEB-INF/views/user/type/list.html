@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Types</h1>
+<table border="1">
+    <tr>
+        <th>Name</th>
+    </tr>
+    <th:block th:each="type : ${types}">
+        <tr>
+            <td><a th:text="${type.name}"></a></td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>
