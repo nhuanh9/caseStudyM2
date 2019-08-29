@@ -11,7 +11,7 @@ public class Type {
     private Long id;
     private String name;
 
-    @OneToMany(targetEntity = Note.class)
+    @OneToMany(targetEntity = Note.class, mappedBy = "type", fetch = FetchType.EAGER)
     private List<Note> notes;
 
     public Type() {

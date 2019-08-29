@@ -1,5 +1,6 @@
 package com.codegym.config;
 
+import com.codegym.formater.TypeFormatter;
 import com.codegym.service.NoteService;
 import com.codegym.service.TypeService;
 import com.codegym.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -33,6 +35,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Formatter;
 import java.util.Properties;
 
 @Configuration
@@ -134,4 +137,8 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
         return properties;
     }
 
+    @Override
+    public void addFormatters(FormatterRegistry registry){
+        registry.addFormatter(new TypeFormatter(applicationContext.getBean(TypeService.class)));
+    }
 }

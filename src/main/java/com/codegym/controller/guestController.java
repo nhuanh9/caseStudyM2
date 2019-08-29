@@ -22,6 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class guestController {
@@ -40,7 +42,7 @@ public class guestController {
 
     @GetMapping("/home")
     public ModelAndView homeGuest(){
-        ModelAndView modelAndView = new ModelAndView("guest/home");
+        ModelAndView modelAndView = new ModelAndView("/guest/home");
         modelAndView.addObject("user",getPrincipal());
         return modelAndView;
 
@@ -106,4 +108,26 @@ public class guestController {
         return modelAndView;
     }
 
+    @GetMapping("/notes")
+    public ModelAndView showNoteList(Pageable pageable, @RequestParam("search") Optional<String> search) {
+        Page<Note> notes;
+
+        if (search.isPresent()) {
+            notes = noteService.findNoteByTitleContains(search.get(), pageable);
+        } else {
+            notes = noteService.findAll(pageable);
+        }
+
+        ModelAndView modelAndView = new ModelAndView("/guest/note/list");
+        modelAndView.addObject("notes", notes);
+        return modelAndView;
+    }
+
+    @GetMapping("/types")
+    public ModelAndView typeList(Pageable pageable){
+        Page<Type> types = typeService.findAll(pageable);
+        ModelAndView modelAndView = new ModelAndView("guest/type/list");
+        modelAndView.addObject("types", types);
+        return modelAndView;
+    }
 }

@@ -19,4 +19,6 @@ public interface NoteService {
 
     Page<Note> findAllByType(Type type, Pageable pageable);
 
+    Page<Note> findNoteByTitleContains(String title, Pageable pageable);
+
 }

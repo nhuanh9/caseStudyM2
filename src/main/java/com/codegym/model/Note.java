@@ -13,6 +13,7 @@ public class Note {
     private String content;
     private String detail;
     private String author;
+
     @ManyToOne
     @JoinColumn(name = "type_id")
     private Type type;
@@ -53,7 +54,7 @@ public class Note {
     }
 
     public Type getType() {
-        return type;
+        return type == null ? new Type() : type;
     }
 
     public void setType(Type type) {

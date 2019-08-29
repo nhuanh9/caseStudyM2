@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>List Note</title>
 </head>
 <body>
-
+<a href="/note/home">Go to homepage</a>
+<h1>List Note</h1>
+<form>
+    Search by title:
+    <input type="text" name="search">
+    <input type="submit" value="Search">
+</form>
+<table>
+    <tr>
+        <td>Title</td>
+        <td>Content</td>
+        <td>Type</td>
+        <td>Detail</td>
+        <td>Author</td>
+    </tr>
+    <th:block th:each="note : ${notes}">
+        <tr>
+            <td th:text="${note.title}"></td>
+            <td th:text="${note.content}"></td>
+            <td><a th:href="@{/note/type/view/__${note.type.id}__}" th:text="${note.type.name}"></a></td>
+            <td th:text="${note.detail}"></td>
+            <td th:text="${note.author}"></td>
+        </tr>
+    </th:block>
+</table>
 </body>
 </html>

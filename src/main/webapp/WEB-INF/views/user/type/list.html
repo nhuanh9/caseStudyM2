@@ -9,10 +9,14 @@
 <table border="1">
     <tr>
         <th>Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
-    <th:block th:each="type : ${types}">
+    <th:block th:each="noteType : ${types}">
         <tr>
-            <td><a th:text="${type.name}"></a></td>
+            <td><a th:text="${noteType.name}"></a></td>
+            <td><a th:href="@{/user/note/edit/__${noteType.id}__}">edit</a></td>
+            <td><a th:href="@{/user/note/delete/__${noteType.id}__}">delete</a></td>
         </tr>
     </th:block>
 </table>

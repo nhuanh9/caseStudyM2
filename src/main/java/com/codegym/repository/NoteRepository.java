@@ -9,8 +9,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface NoteRepository extends PagingAndSortingRepository<Note, Long> {
 
     Page<Note> findAllByAuthorStartsWith(String author, Pageable pageable);
+
     Page<Note> findAllByType(Type author, Pageable pageable);
 
-
+    Page<Note> findNoteByTitleContains(String title, Pageable pageable);
 
 }

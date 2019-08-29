@@ -14,12 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class userController {
@@ -34,6 +33,11 @@ public class userController {
 
     @Autowired
     private UserService userService;
+
+    @ModelAttribute("types")
+    public Iterable<Type> provinces(Pageable pageable){
+        return typeService.findAll(pageable);
+    }
 
     private String getPrincipal() {
         String userName;
@@ -76,6 +80,15 @@ public class userController {
         return modelAndView;
     }
 
+    @PostMapping("/user/add-new-note")
+    public ModelAndView saveNoteType(@ModelAttribute("note") Note note) {
+        noteService.save(note);
+
+        ModelAndView modelAndView = new ModelAndView("/user/note/create");
+        modelAndView.addObject("note", new Note());
+        modelAndView.addObject("message", "Created!");
+        return modelAndView;
+    }
     @GetMapping("/user/types")
     public ModelAndView typeList(Pageable pageable){
         Page<Type> types = typeService.findAll(pageable);
@@ -83,4 +96,58 @@ public class userController {
         modelAndView.addObject("types", types);
         return modelAndView;
     }
+
+    @GetMapping("/user/notes")
+    public ModelAndView showNoteList(Pageable pageable, @RequestParam("search") Optional<String> search) {
+        Page<Note> notes;
+
+        if (search.isPresent()) {
+            notes = noteService.findNoteByTitleContains(search.get(), pageable);
+        } else {
+            notes = noteService.findAll(pageable);
+        }
+
+        ModelAndView modelAndView = new ModelAndView("/user/note/list");
+        modelAndView.addObject("notes", notes);
+        return modelAndView;
+    }
+
+    @GetMapping("/user/editNote/{id}")
+    public ModelAndView showEditForm(@PathVariable Long id) {
+        Note note = noteService.findById(id);
+        if (note != null) {
+            ModelAndView modelAndView = new ModelAndView("user/note/edit");
+            modelAndView.addObject("note", note);
+            return modelAndView;
+        }
+        return new ModelAndView("/error-404");
+    }
+
+    @PostMapping("/user/editNote")
+    public ModelAndView editNoteType(@ModelAttribute Note note) {
+        noteService.save(note);
+
+        ModelAndView modelAndView = new ModelAndView("user/note/edit");
+        modelAndView.addObject("note", note);
+        modelAndView.addObject("message", "Updated!");
+        return modelAndView;
+    }
+
+    @GetMapping("/user/deleteNote/{id}")
+    public ModelAndView showDeleteForm(@PathVariable Long id) {
+        Note note = noteService.findById(id);
+        if (note != null) {
+            ModelAndView modelAndView = new ModelAndView("user/note/delete");
+            modelAndView.addObject("note", note);
+            return modelAndView;
+        }
+        return new ModelAndView("/error-404");
+    }
+
+    @PostMapping("/user/deleteNote")
+    public String deleteNoteType(@ModelAttribute Note note) {
+        noteService.remove(note.getId());
+        return "redirect:/user/notes";
+    }
+
 }
